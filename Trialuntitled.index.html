@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MBATHE FASHION FUSION ONLINE</title>
+  <meta name="description" content="Affordable, high-quality fashion. Order via WhatsApp. Malawi (MWK)." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👗</text></svg>">
+  <style>
+    :root {
+      --bg: #0b0b0c;
+      --bg-elev: #121216;
+      --text: #e8e8ea;
+      --muted: #b9bbc6;
+      --card: #161721;
+      --accent: #ff5e62;
+      --accent-2: #ffa07a;
+      --border: #24252f;
+      --shadow: 0 10px 24px rgba(0,0,0,.35);
+      --radius: 16px;
+    }
+    [data-theme="light"]{
+      --bg:#f6f7fb; --bg-elev:#ffffff; --text:#181a1f; --muted:#5b5e6a; --card:#ffffff;
+      --accent:#ff5e62; --accent-2:#f7d794; --border:#e6e8f0; --shadow:0 10px 24px rgba(12,14,24,.08)
+    }
+    [data-theme="rose"]{
+      --bg:#0f0c15; --bg-elev:#18131f; --text:#f7ecff; --muted:#cdbfe0; --card:#1e1827;
+      --accent:#ff6f91; --accent-2:#ffc2d1; --border:#2a2333; --shadow:0 10px 24px rgba(22,8,28,.35)
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 10% -10%, color-mix(in oklab, var(--accent) 25%, transparent) 0%, transparent 60%),
+                  radial-gradient(900px 500px at 110% 10%, color-mix(in oklab, var(--accent-2) 25%, transparent) 0%, transparent 60%),
+                  var(--bg);
+      color:var(--text); line-height:1.45
+    }
+    a{color:var(--accent); text-decoration:none}
+    a:hover{text-decoration:underline}
+    .wrap{max-width:1200px; margin-inline:auto; padding:24px}
+    .topbar{
+      position:sticky; top:0; z-index:50; backdrop-filter: blur(10px);
+      background: color-mix(in oklab, var(--bg) 85%, transparent);
+      border-bottom:1px solid var(--border)
+    }
+    .topbar-inner{display:flex; align-items:center; gap:16px; padding:12px 24px}
+    .brand{display:flex; align-items:center; gap:12px; font-weight:700}
+    .logo{
+      width:42px; height:42px; border-radius:12px; background: linear-gradient(120deg, var(--accent), var(--accent-2));
+      display:grid; place-items:center; color:#fff; box-shadow: var(--shadow)
+    }
+    .nav{margin-left:auto; display:flex; gap:16px; flex-wrap:wrap}
+    .nav a{padding:8px 12px; border-radius:10px}
+    .nav a:hover{background:var(--bg-elev)}
+    .ctrls{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+    select, input, button, textarea{
+      background:var(--bg-elev); color:var(--text); border:1px solid var(--border); border-radius:12px; padding:10px 12px; font:inherit
+    }
+    button.primary{
+      background:linear-gradient(120deg, var(--accent), var(--accent-2)); color:#1b1020; border:none; font-weight:700;
+      box-shadow: var(--shadow)
+    }
+    button.ghost{background:transparent; border:1px solid var(--border)}
+    .hero{
+      display:grid; grid-template-columns: 1.2fr .8fr; gap:28px; align-items:center; padding:36px 24px
+    }
+    .hero-card{
+      background:linear-gradient(180deg, color-mix(in oklab, var(--accent) 15%, var(--card)) 0%, var(--card) 60%);
+      border:1px solid var(--border); border-radius: var(--radius); padding:28px; box-shadow: var(--shadow)
+    }
+    .badges{display:flex; gap:10px; flex-wrap:wrap; margin:14px 0}
+    .badge{padding:6px 10px; border:1px dashed var(--border); border-radius:999px; color:var(--muted); font-size:12px}
+    .grid{display:grid; gap:18px}
+    .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+    .grid.cols-4{grid-template-columns:repeat(4,1fr)}
+    @media (max-width: 980px){ .hero{grid-template-columns:1fr} .grid.cols-4{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width: 640px){ .grid.cols-3{grid-template-columns:1fr} .grid.cols-4{grid-template-columns:1fr}}
+
+    .card{
+      background:var(--card); border:1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow)
+    }
+    .card.pad{padding:18px}
+    .product{
+      display:flex; flex-direction:column; gap:10px; overflow:hidden
+    }
+    .product img{
+      width:100%; height:220px; object-fit:cover; display:block; background:#00000010
+    }
+    .price{font-weight:800}
+    .muted{color:var(--muted)}
+    .row{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+    .row.spread{justify-content:space-between}
+
+    /* Accordion */
+    details{border:1px solid var(--border); border-radius:12px; background:var(--bg-elev)}
+    details+details{margin-top:10px}
+    summary{cursor:pointer; padding:12px 14px; font-weight:600}
+    details > div{padding:0 14px 14px}
+
+    /* Footer */
+    footer{margin-top:40px; padding:24px 0; border-top:1px solid var(--border); color:var(--muted); font-size:14px}
+
+    /* Toast */
+    .toast{position:fixed; right:16px; bottom:16px; background:var(--bg-elev); border:1px solid var(--border); padding:12px 14px; border-radius:12px; opacity:0; transform: translateY(10px); transition:.25s; box-shadow: var(--shadow)}
+    .toast.show{opacity:1; transform: translateY(0)}
+    .visually-hidden{position:absolute !important; height:1px; width:1px; overflow:hidden; clip:rect(1px,1px,1px,1px); white-space:nowrap}
+  </style>
+</head>
+<body data-theme="light">
+  <header class="topbar">
+    <div class="topbar-inner wrap">
+      <div class="brand">
+        <div class="logo" id="logo" title="Click to set your logo">MF</div>
+        <div>
+          <div style="font-size:18px">MBATHE FASHION FUSION ONLINE</div>
+          <div class="muted" style="font-size:12px">Affordable • Quality • Malawi</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a href="#shop">Shop</a>
+        <a href="#about">About</a>
+        <a href="#policies">Policies</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <div class="ctrls">
+        <select id="theme">
+          <option value="light">☀️ Light</option>
+          <option value="dark">🌙 Dark</option>
+          <option value="rose">🌸 Rose</option>
+        </select>
+        <a class="row" href="https://chat.whatsapp.com/HbuQsEIgjrtKrjMIxK1QUv?mode=ac_t" target="_blank" rel="noopener">
+          <button class="ghost">Join WhatsApp</button>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- HERO -->
+    <section class="hero" id="home">
+      <div class="hero-card">
+        <h1 style="margin:0 0 10px 0; font-size: clamp(28px, 3.6vw, 40px);">Best Affordable, High-Quality Fashion</h1>
+        <p class="muted">Shop curated fashion at fair MWK prices. Order instantly via WhatsApp — fast replies, nationwide delivery.</p>
+        <div class="badges">
+          <span class="badge">Original Quality</span>
+          <span class="badge">Pay on Delivery (select areas)</span>
+          <span class="badge">14-Day Exchange</span>
+        </div>
+        <div class="row">
+          <a href="#shop"><button class="primary">Shop Now</button></a>
+          <a href="#contact"><button class="ghost">Contact</button></a>
+        </div>
+      </div>
+      <div class="grid cols-1">
+        <div class="card product">
+          <img src="https://images.unsplash.com/photo-1544441893-675973e31985?q=80&w=1600&auto=format&fit=crop" alt="Featured look">
+          <div class="pad">
+            <div class="row spread">
+              <strong>Featured Drop</strong>
+              <span class="muted">Limited</span>
+            </div>
+            <p class="muted" style="margin:6px 0 0 0;">Fresh fits you’ll love. Tap below to explore.</p>
+            <div class="row" style="margin-top:10px">
+              <a href="#shop"><button class="ghost">Browse Collection</button></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTROLS -->
+    <section id="shop" class="grid" style="margin-top:6px">
+      <div class="card pad">
+        <div class="row" style="gap:12px; align-items:flex-end; flex-wrap:wrap">
+          <div style="flex:1 1 220px">
+            <label class="muted" for="q">Search</label>
+            <input id="q" placeholder="Search products (e.g., sneakers, dress, size M)" />
+          </div>
+          <div>
+            <label class="muted" for="cat">Category</label>
+            <select id="cat">
+              <option value="all">All</option>
+              <option value="Men">Men</option>
+              <option value="Women">Women</option>
+              <option value="Kids">Kids</option>
+              <option value="Accessories">Accessories</option>
+            </select>
+          </div>
+          <div>
+            <label class="muted" for="sort">Sort</label>
+            <select id="sort">
+              <option value="featured">Featured</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="new">Newest</option>
+            </select>
+          </div>
+          <div class="row">
+            <button id="clear" class="ghost">Reset</button>
+          </div>
+          <div class="row" style="margin-left:auto">
+            <button id="addLocal" class="ghost" title="Local-only (saved on your device)">+ Add Product (Local)</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCTS GRID -->
+      <div id="products" class="grid cols-4"></div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" style="margin-top:30px">
+      <div class="grid cols-3">
+        <div class="card pad">
+          <h3 style="margin:0 0 8px">Who We Are</h3>
+          <p class="muted">MBATHE FASHION FUSION ONLINE curates quality pieces at fair prices in MWK. We partner with trusted suppliers and check every item before dispatch.</p>
+        </div>
+        <div class="card pad">
+          <h3 style="margin:0 0 8px">Why Shop With Us</h3>
+          <ul class="muted" style="margin:0; padding-left:18px">
+            <li>Fast WhatsApp ordering & support</li>
+            <li>Secure payments (cash/MoMo/bank)</li>
+            <li>Nationwide delivery (1–3 business days)</li>
+          </ul>
+        </div>
+        <div class="card pad">
+          <h3 style="margin:0 0 8px">Contact</h3>
+          <p class="muted" id="contact">
+            Email: <a href="mailto:mbathembashu@gmail.com">mbathembashu@gmail.com</a><br/>
+            Phone: <a href="tel:+265996469902">+265 996 46 99 02</a> / <a href="tel:+265988587921">+265 988 58 79 21</a><br/>
+            WhatsApp Group: <a target="_blank" rel="noopener" href="https://chat.whatsapp.com/HbuQsEIgjrtKrjMIxK1QUv?mode=ac_t">Join here</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- POLICIES -->
+    <section id="policies" style="margin-top:30px">
+      <div class="grid cols-3">
+        <div class="card pad">
+          <h3 style="margin:0 0 8px">Shipping</h3>
+          <p class="muted">Dispatch within 24 hrs for in-stock items. Delivery 1–3 business days in Malawi. Pickup available in major towns on request.</p>
+        </div>
+        <div class="card pad">
+          <h3 style="margin:0 0 8px">Returns & Exchanges</h3>
+          <p class="muted">14-day exchange for size/defects. Items must be unused with tags. Customer covers return shipping unless defective.</p>
+        </div>
+        <div class="card pad">
+          <h3 style="margin:0 0 8px">Payments</h3>
+          <p class="muted">Cash on delivery (selected areas), Airtel/ TNM MoMo, or bank transfer. Details shared on WhatsApp when you order.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" style="margin-top:30px">
+      <div class="card pad">
+        <h3 style="margin:0 0 8px">Frequently Asked Questions</h3>
+        <details>
+          <summary>How do I place an order?</summary>
+          <div>Click “Order on WhatsApp” on a product. A pre-filled message with the item details will open in WhatsApp.</div>
+        </details>
+        <details>
+          <summary>Are the prices negotiable?</summary>
+          <div>We price fairly, but chat with us on WhatsApp for any promotions or bundles.</div>
+        </details>
+        <details>
+          <summary>What sizes are available?</summary>
+          <div>Sizes are listed per item. If unsure, message us and we’ll help you pick the best fit.</div>
+        </details>
+      </div>
+    </section>
+
+    <!-- LOCAL ADD MODAL (no admin, local-only) -->
+    <dialog id="localModal" style="border:none; padding:0; background:transparent">
+      <form method="dialog" class="card pad" style="min-width:min(560px, 96vw)">
+        <div class="row spread">
+          <h3 style="margin:0">Add Product (Local Only)</h3>
+          <button value="cancel" class="ghost" aria-label="Close">✕</button>
+        </div>
+        <div class="grid" style="grid-template-columns:1fr 1fr; gap:12px; margin-top:10px">
+          <label>Image
+            <input type="file" id="pImg" accept="image/*" />
+          </label>
+          <label>Title
+            <input type="text" id="pTitle" placeholder="e.g., Classic Denim Jacket" required />
+          </label>
+          <label>Category
+            <select id="pCat">
+              <option>Men</option><option>Women</option><option>Kids</option><option>Accessories</option>
+            </select>
+          </label>
+          <label>Price (MWK)
+            <input type="number" id="pPrice" min="0" step="1" placeholder="35000" required />
+          </label>
+          <label>Size / Options
+            <input type="text" id="pSize" placeholder="e.g., S, M, L" />
+          </label>
+          <label>Notes
+            <input type="text" id="pNotes" placeholder="Color, material, etc." />
+          </label>
+        </div>
+        <div class="row" style="margin-top:10px">
+          <button class="primary" id="saveLocal" value="default">Save Item</button>
+        </div>
+        <p class="muted" style="margin-top:8px">Saved to your browser (localStorage). Not visible to others.</p>
+      </form>
+    </dialog>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <span class="visually-hidden" id="live" aria-live="polite"></span>
+  </main>
+
+  <footer class="wrap">
+    <div class="row spread" style="align-items:flex-start">
+      <div>© <span id="year"></span> MBATHE FASHION FUSION ONLINE — All rights reserved.</div>
+      <div>
+        <a href="mailto:mbathembashu@gmail.com">mbathembashu@gmail.com</a> ·
+        <a href="tel:+265996469902">+265 996 46 99 02</a> /
+        <a href="tel:+265988587921">+265 988 58 79 21</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* ---------- Utilities ---------- */
+    const $$ = sel => document.querySelector(sel);
+    const $$$ = sel => Array.from(document.querySelectorAll(sel));
+    const store = {
+      get k(){ return "mbathe.products.v1" },
+      get t(){ return "mbathe.theme.v1" },
+      load(){ try{ return JSON.parse(localStorage.getItem(this.k)||"[]") }catch{ return [] } },
+      save(list){ localStorage.setItem(this.k, JSON.stringify(list)) },
+      getTheme(){ return localStorage.getItem(this.t) || "light" },
+      setTheme(v){ localStorage.setItem(this.t, v) }
+    };
+    const money = n => new Intl.NumberFormat('en-MW', { style: 'currency', currency: 'MWK', maximumFractionDigits: 0 }).format(n);
+
+    /* ---------- Theme ---------- */
+    const themeSel = $$('#theme');
+    const setTheme = v => { document.body.setAttribute('data-theme', v==="dark"?"":v); if(v==="dark") document.body.removeAttribute('data-theme'); themeSel.value = v; store.setTheme(v); };
+    setTheme(store.getTheme());
+    themeSel.addEventListener('change', e => setTheme(e.target.value));
+
+    /* ---------- Logo upload (optional) ---------- */
+    $$('#logo').addEventListener('click', () => {
+      const i = document.createElement('input'); i.type='file'; i.accept='image/*';
+      i.onchange = e => {
+        const f = e.target.files[0]; if(!f) return;
+        const r = new FileReader(); r.onload = () => { $$('#logo').style.backgroundImage = `url(${r.result})`; $$('#logo').textContent=''; toast('Logo updated (local)'); };
+        r.readAsDataURL(f);
+      };
+      i.click();
+    });
+
+    /* ---------- Sample Catalog (can edit/extend) ---------- */
+    const seed = [
+      { id:'SKU-001', title:'Classic Denim Jacket', cat:'Men', price:45000, size:'S-XL', notes:'Blue | Durable stitching', img:'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=1600&auto=format&fit=crop', featured:true, created:Date.now()-86400000*6 },
+      { id:'SKU-002', title:'Floral Summer Dress', cat:'Women', price:38000, size:'S-L', notes:'Lightweight | Flowing', img:'https://images.unsplash.com/photo-1520975940479-6c0a72b44f9f?q=80&w=1600&auto=format&fit=crop', featured:true, created:Date.now()-86400000*3 },
+      { id:'SKU-003', title:'Kids Sneakers', cat:'Kids', price:22000, size:'28–34', notes:'Breathable | Non-slip', img:'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1600&auto=format&fit=crop', created:Date.now()-86400000*1 },
+      { id:'SKU-004', title:'Leather Crossbody Bag', cat:'Accessories', price:56000, size:'One Size', notes:'Adjustable strap', img:'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=1600&auto=format&fit=crop', created:Date.now()-86400000*10 },
+      { id:'SKU-005', title:'Minimalist Hoodie', cat:'Men', price:35000, size:'M-XXL', notes:'Soft fleece | Black', img:'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=1600&auto=format&fit=crop', created:Date.now()-86400000*2 },
+      { id:'SKU-006', title:'Silk Blouse', cat:'Women', price:52000, size:'S-L', notes:'Cream | Elegant', img:'https://images.unsplash.com/photo-1520975883262-2a99a1f0d3b9?q=80&w=1600&auto=format&fit=crop', created:Date.now()-86400000*5 },
+      { id:'SKU-007', title:'Cap — Logo Embroidery', cat:'Accessories', price:15000, size:'Adjustable', notes:'Cotton twill', img:'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?q=80&w=1600&auto=format&fit=crop', created:Date.now()-86400000*12 },
+      { id:'SKU-008', title:'Jogger Set', cat:'Men', price:42000, size:'M-XL', notes:'Grey | Comfy', img:'https://images.unsplash.com/photo-1521577352947-9bb58764b69a?q=80&w=1600&auto=format&fit=crop', created:Date.now()-86400000*7 }
+    ];
+    const local = store.load();
+    let catalog = (local && local.length) ? local : seed;
+    if(!local || !local.length) store.save(seed);
+
+    /* ---------- Rendering ---------- */
+    const listEl = $$('#products');
+    const render = () => {
+      const q = $$('#q').value.trim().toLowerCase();
+      const cat = $$('#cat').value;
+      const sort = $$('#sort').value;
+      let items = [...catalog];
+
+      // Filter
+      if(cat !== 'all') items = items.filter(p => p.cat === cat);
+      if(q){
+        items = items.filter(p => [p.title, p.cat, p.size, p.notes, p.id].filter(Boolean).join(' ').toLowerCase().includes(q));
+      }
+
+      // Sort
+      if(sort === 'price-asc') items.sort((a,b)=>a.price-b.price);
+      else if(sort === 'price-desc') items.sort((a,b)=>b.price-a.price);
+      else if(sort === 'new') items.sort((a,b)=>b.created - a.created);
+      else items.sort((a,b)=>(b.featured?1:0)-(a.featured?1:0));
+
+      // Draw
+      listEl.innerHTML = items.map(p => productCard(p)).join('') || `<div class="card pad"><p class="muted">No items found. Try clearing filters.</p></div>`;
+      // Bind actions
+      $$$('[data-whatsapp]').forEach(btn => btn.addEventListener('click', onWhatsApp));
+      $$$('[data-fav]').forEach(btn => btn.addEventListener('click', onFav));
+      $$$('[data-quick]').forEach(btn => btn.addEventListener('click', onQuickView));
+    };
+
+    const productCard = p => `
+      <article class="card product">
+        <img src="${p.img}" alt="${p.title}">
+        <div class="pad">
+          <div class="row spread">
+            <strong>${p.title}</strong>
+            <span class="price">${money(p.price)}</span>
+          </div>
+          <div class="row spread">
+            <span class="muted">${p.cat}${p.size ? ' • '+p.size : ''}</span>
+            <span class="muted" title="Stock Keeping Unit">${p.id || ''}</span>
+          </div>
+          <p class="muted" style="margin:6px 0">${p.notes || ''}</p>
+          <div class="row">
+            <button class="primary" data-whatsapp='${encodeURIComponent(JSON.stringify(p))}'>Order on WhatsApp</button>
+            <button class="ghost" data-quick='${encodeURIComponent(JSON.stringify(p))}'>Quick View</button>
+            <button class="ghost" data-fav='${encodeURIComponent(p.id)}' aria-label="Save">♡</button>
+          </div>
+        </div>
+      </article>
+    `;
+
+    /* ---------- Actions ---------- */
+    function onWhatsApp(e){
+      const p = JSON.parse(decodeURIComponent(e.currentTarget.getAttribute('data-whatsapp')));
+      const msg = `Hello MBATHE! 👋%0A%0AI want to order:%0A• ${p.title}%0A• ${money(p.price)}%0A• Category: ${p.cat}${p.size?`%0A• Size/Option: ${p.size}`:''}%0A• SKU: ${p.id || 'N/A'}%0A%0APlease advise delivery & payment options.`;
+      // Prefer direct numbers (fallback to wa.me without number if needed)
+      const phone = '265996469902'; // primary contact (Malawi MSISDN)
+      const url = `https://wa.me/${phone}?text=${msg}`;
+      window.open(url, '_blank', 'noopener');
+    }
+
+    function onFav(e){
+      const id = decodeURIComponent(e.currentTarget.getAttribute('data-fav'));
+      e.currentTarget.textContent = '❤';
+      toast('Saved to favorites (local)');
+    }
+
+    function onQuickView(e){
+      const p = JSON.parse(decodeURIComponent(e.currentTarget.getAttribute('data-quick')));
+      const d = document.createElement('dialog');
+      d.style.border = 'none'; d.style.padding='0'; d.style.background='transparent';
+      d.innerHTML = `
+        <form method="dialog" class="card" style="max-width:min(860px,96vw); overflow:hidden">
+          <div class="grid" style="grid-template-columns:1.1fr .9fr; gap:0">
+            <img src="${p.img}" alt="${p.title}" style="height:100%; max-height:420px; object-fit:cover">
+            <div class="pad">
+              <div class="row spread">
+                <h3 style="margin:0">${p.title}</h3>
+                <strong class="price">${money(p.price)}</strong>
+              </div>
+              <p class="muted" style="margin:.4rem 0">${p.cat}${p.size ? ' • '+p.size : ''} • ${p.id || ''}</p>
+              <p class="muted">${p.notes || ''}</p>
+              <div class="row" style="margin-top:10px">
+                <button class="primary" data-whatsapp='${encodeURIComponent(JSON.stringify(p))}'>Order on WhatsApp</button>
+                <button class="ghost" value="cancel">Close</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      `;
+      document.body.appendChild(d);
+      d.showModal();
+      d.querySelector('[data-whatsapp]').addEventListener('click', onWhatsApp);
+      d.addEventListener('close', ()=> d.remove());
+    }
+
+    /* ---------- Filters / Controls ---------- */
+    $$('#q').addEventListener('input', render);
+    $$('#cat').addEventListener('change', render);
+    $$('#sort').addEventListener('change', render);
+    $$('#clear').addEventListener('click', ()=>{
+      $$('#q').value=''; $$('#cat').value='all'; $$('#sort').value='featured'; render();
+    });
+
+    /* ---------- Local Add Modal (no admin; for your device only) ---------- */
+    const modal = $$('#localModal');
+    $$('#addLocal').addEventListener('click', ()=> modal.showModal());
+    $$('#saveLocal').addEventListener('click', (ev)=>{
+      ev.preventDefault();
+      const title = $$('#pTitle').value.trim();
+      const price = parseInt($$('#pPrice').value,10);
+      const cat = $$('#pCat').value;
+      const size = $$('#pSize').value.trim();
+      const notes = $$('#pNotes').value.trim();
+      const file = $$('#pImg').files[0];
+
+      const add = (imgUrl) => {
+        const item = { id:'SKU-'+Math.floor(Math.random()*900+100), title, cat, price, size, notes, img:imgUrl, created:Date.now() };
+        const list = store.load(); list.unshift(item); store.save(list); catalog = list; render(); modal.close(); toast('Item saved locally');
+        // reset simple
+        ['pTitle','pPrice','pSize','pNotes'].forEach(id=> $$('#'+id).value=''); $$('#pImg').value='';
+      };
+
+      if(!title || !price || !cat){ toast('Please fill in required fields'); return; }
+
+      if(file){
+        const r = new FileReader();
+        r.onload = ()=> add(r.result);
+        r.readAsDataURL(file);
+      } else {
+        add('https://images.unsplash.com/photo-1520975940479-6c0a72b44f9f?q=80&w=1600&auto=format&fit=crop');
+      }
+    });
+
+    /* ---------- Toast ---------- */
+    function toast(text){
+      const t = $$('#toast'); t.textContent = text; t.classList.add('show'); $$('#live').textContent = text;
+      clearTimeout(toast._id); toast._id = setTimeout(()=> t.classList.remove('show'), 2200);
+    }
+
+    /* ---------- Init ---------- */
+    render();
+    $$('#year').textContent = new Date().getFullYear();
+  </script>
+
+  <!-- Optional: Organization structured data -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Organization",
+    "name":"MBATHE FASHION FUSION ONLINE",
+    "url":"https://example.com",
+    "logo":"https://example.com/logo.png",
+    "sameAs": ["https://www.facebook.com/","https://www.instagram.com/"],
+    "contactPoint": {
+      "@type":"ContactPoint",
+      "telephone":"+265996469902",
+      "contactType":"customer service",
+      "areaServed":"MW",
+      "availableLanguage":["en"]
+    }
+  }
+  </script>
+</body>
+</html>
