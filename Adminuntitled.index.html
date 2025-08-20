@@ -1,0 +1,501 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MBATHE FASHION FUSION — Pro</title>
+  <meta name="description" content="MBATHE FASHION FUSION ONLINE — professional single-file storefront with theme switcher and admin panel. Orders via WhatsApp." />
+  <style>
+    :root{
+      --bg: #f6f7fb;
+      --card:#fff;
+      --muted:#6b7280;
+      --accent:#ff5e62;
+      --text:#111827;
+      --glass: rgba(255,255,255,0.6);
+      --shadow: 0 6px 18px rgba(15,23,42,0.08);
+      --radius:14px;
+      --max-width:1200px;
+    }
+    [data-theme="dark"]{
+      --bg:#0b1020;
+      --card:#0f1724;
+      --muted:#9aa4b2;
+      --accent:#ff8a7a;
+      --text:#e6eef8;
+      --glass: rgba(255,255,255,0.03);
+      --shadow: 0 8px 30px rgba(2,6,23,0.6);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Arial; background:var(--bg); color:var(--text)}
+    .wrap{max-width:var(--max-width);margin:28px auto;padding:20px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#f7d794);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:20px;box-shadow:var(--shadow)}
+    h1{font-size:18px;margin:0}
+    p.lead{margin:0;color:var(--muted)}.controls{display:flex;gap:8px;align-items:center}
+.btn{background:var(--accent);color:#fff;padding:10px 14px;border-radius:10px;border:0;cursor:pointer;font-weight:600;box-shadow:var(--shadow)}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid rgba(255,255,255,0.06)}
+
+main{display:grid;grid-template-columns:1fr 360px;gap:20px}
+@media (max-width:980px){main{grid-template-columns:1fr} .sidebar{order:2}}
+
+/* Product grid */
+.products{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.card{background:var(--card);border-radius:12px;padding:12px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px}
+.imgwrap{height:180px;border-radius:10px;overflow:hidden;background:linear-gradient(180deg,rgba(0,0,0,0.03),rgba(0,0,0,0.02));display:flex;align-items:center;justify-content:center}
+.imgwrap img{max-width:100%;max-height:100%;object-fit:cover}
+.meta{display:flex;justify-content:space-between;align-items:center}
+.title{font-weight:700}
+.price{color:var(--accent);font-weight:800}
+.muted{color:var(--muted);font-size:13px}
+
+/* Sidebar */
+.sidebar{position:sticky;top:28px}
+.panel{background:var(--card);padding:14px;border-radius:12px;box-shadow:var(--shadow);margin-bottom:14px}
+label{display:block;font-size:13px;margin-bottom:8px;color:var(--muted)}
+input[type="text"], input[type="number"], textarea, select{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:transparent;color:var(--text)}
+.small{font-size:13px}
+
+/* Admin modal */
+.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:20px}
+.modal.show{display:flex}
+.modal .panel{max-width:520px;width:100%}
+
+/* Product list in admin */
+.list{max-height:300px;overflow:auto;padding-right:6px}
+.list-item{display:flex;gap:8px;align-items:center;padding:8px;border-radius:8px}
+.list-item img{width:56px;height:56px;border-radius:8px;object-fit:cover}
+.actions{display:flex;gap:6px}
+
+footer{margin-top:20px;color:var(--muted);font-size:13px;text-align:center}
+
+/* Utilities */
+.flex{display:flex;gap:8px;align-items:center}
+.badge{background:var(--glass);padding:6px 8px;border-radius:999px;font-weight:600}
+.search{display:flex;gap:8px}
+.search input{padding:10px;border-radius:999px;border:1px solid rgba(0,0,0,0.06);min-width:220px}
+
+/* tiny responsive tweaks */
+@media (max-width:420px){.imgwrap{height:140px}}
+
+  </style>
+</head>
+<body>
+  <div class="wrap" id="app">
+    <header>
+      <div class="brand">
+        <div class="logo" id="logoEl">MF</div>
+        <div>
+          <h1>MBATHE FASHION FUSION</h1>
+          <p class="lead">Affordable. High Quality. Order via WhatsApp.</p>
+        </div>
+      </div><div class="controls">
+    <div class="search">
+      <input type="text" id="search" placeholder="Search products, categories, SKU..." />
+    </div>
+    <button class="btn ghost" id="themeToggle">Theme</button>
+    <button class="btn" id="adminBtn">Admin</button>
+  </div>
+</header>
+
+<main>
+  <section>
+    <div class="panel" style="margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <strong id="productCount">0</strong> Products • <span id="stockCount">0</span> In Stock
+      </div>
+      <div class="flex">
+        <select id="sort">
+          <option value="newest">Newest</option>
+          <option value="price_asc">Price ↑</option>
+          <option value="price_desc">Price ↓</option>
+        </select>
+        <select id="categoryFilter">
+          <option value="all">All Categories</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="products" id="products"></div>
+
+    <footer>
+      <div>&copy; 2025 MBATHE FASHION FUSION. Built as a professional single-file demo.</div>
+      <div class="muted small">Note: This is a client-side demo. For production, integrate a backend and secure authentication.</div>
+    </footer>
+  </section>
+
+  <aside class="sidebar">
+    <div class="panel">
+      <h3 style="margin:0 0 8px 0">Quick Add (Public)</h3>
+      <div class="small muted">Visitors can send an order via WhatsApp. Use the form to preview a product card.</div>
+      <div style="height:10px"></div>
+      <label>Product Image</label>
+      <input type="file" id="quickImage" accept="image/*">
+      <label>Product Name</label>
+      <input type="text" id="quickName" placeholder="e.g. Floral Midi Dress">
+      <label>Price (MWK)</label>
+      <input type="number" id="quickPrice" placeholder="0.00">
+      <label>Short Desc</label>
+      <input type="text" id="quickDesc" placeholder="Short description">
+      <div style="height:10px"></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn" id="previewBtn">Preview</button>
+        <button class="btn ghost" id="clearQuick">Clear</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3 style="margin:0 0 8px 0">Contact</h3>
+      <div class="muted small">Orders are placed through WhatsApp. We'll open WhatsApp Web / App with a prefilled message.</div>
+      <div style="height:8px"></div>
+      <div class="muted small">Phone (business): <strong id="bizPhone">+265996469902</strong></div>
+      <div style="height:8px"></div>
+      <a id="whatsappGroup" href="https://chat.whatsapp.com/HbuQsEIgjrtKrjMIxK1QUv?mode=ac_t" target="_blank" class="small">Join our WhatsApp Group</a>
+    </div>
+
+    <div class="panel">
+      <h3 style="margin:0 0 8px 0">How to Order</h3>
+      <ol class="small muted" style="margin:0;padding-left:18px;">
+        <li>Click a product card to open quick order modal.</li>
+        <li>Enter quantity and message.</li>
+        <li>Click "Order via WhatsApp" — WhatsApp will open with your message.
+        </li>
+        <li>Admin can view orders in the Admin Panel.</li>
+      </ol>
+    </div>
+  </aside>
+</main>
+
+<!-- Admin Modal -->
+<div class="modal" id="adminModal">
+  <div class="panel">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <h3 style="margin:0">Admin Panel</h3>
+      <div class="flex">
+        <button class="btn ghost" id="closeAdmin">Close</button>
+      </div>
+    </div>
+
+    <div id="adminContent">
+      <!-- login state or admin dashboard will show here -->
+    </div>
+  </div>
+</div>
+
+  </div>  <script>
+    /*****************************
+     * Simple single-file storefront
+     * - Products stored in localStorage ('mf_products')
+     * - Orders stored in localStorage ('mf_orders')
+     * - Admin password stored in localStorage ('mf_admin_pw') - default: admin123
+     * - Client-side only. Not secure for production.
+     *****************************/
+
+    const STORAGE_PRODUCTS = 'mf_products_v1';
+    const STORAGE_ORDERS = 'mf_orders_v1';
+    const STORAGE_ADMIN_PW = 'mf_admin_pw_v1';
+
+    // default admin password if not set
+    if(!localStorage.getItem(STORAGE_ADMIN_PW)) localStorage.setItem(STORAGE_ADMIN_PW', 'admin123');
+  </script>  <script>
+    // App state helpers
+    const $ = (id)=>document.getElementById(id);
+    const readJSON = (k, fallback)=>{ try{const v=localStorage.getItem(k); return v?JSON.parse(v):fallback;}catch(e){return fallback} }
+    const writeJSON = (k,v)=>localStorage.setItem(k,JSON.stringify(v))
+
+    // Init storage defaults
+    let products = readJSON(STORAGE_PRODUCTS, []);
+    let orders = readJSON(STORAGE_ORDERS, []);
+    let adminPw = localStorage.getItem(STORAGE_ADMIN_PW) || 'admin123';
+
+    // seed if empty
+    if(products.length===0){
+      products = [
+        {id: genId(), name:'Floral Midi Dress', price:3200, sku:'MF-001', category:'Dresses', stock:12, desc:'Lightweight floral midi — perfect for sunny days', img:sampleImg(0), created: Date.now()},
+        {id: genId(), name:'Classic White Tee', price:750, sku:'MF-002', category:'Tops', stock:30, desc:'Comfort cotton tee', img:sampleImg(1), created: Date.now()},
+        {id: genId(), name:'Slim Fit Jeans', price:2650, sku:'MF-003', category:'Bottoms', stock:8, desc:'Stretch denim for everyday wear', img:sampleImg(2), created: Date.now()}
+      ];
+      writeJSON(STORAGE_PRODUCTS, products);
+    }
+
+    // Elements
+    const productsEl = $('products');
+    const productCount = $('productCount');
+    const stockCount = $('stockCount');
+    const searchEl = $('search');
+    const sortEl = $('sort');
+    const categoryFilter = $('categoryFilter');
+    const themeToggle = $('themeToggle');
+    const adminBtn = $('adminBtn');
+    const adminModal = $('adminModal');
+    const adminContent = $('adminContent');
+    const closeAdmin = $('closeAdmin');
+    const quickImage = $('quickImage');
+    const quickName = $('quickName');
+    const quickPrice = $('quickPrice');
+    const quickDesc = $('quickDesc');
+    const previewBtn = $('previewBtn');
+    const clearQuick = $('clearQuick');
+    const logoEl = $('logoEl');
+    const bizPhoneEl = $('bizPhone');
+    const whatsappGroup = $('whatsappGroup');
+
+    // Apply theme from localStorage
+    const applyTheme = ()=>{
+      const t = localStorage.getItem('mf_theme')||'light';
+      if(t==='dark') document.documentElement.setAttribute('data-theme','dark'); else document.documentElement.removeAttribute('data-theme');
+      themeToggle.textContent = t==='dark'? 'Light' : 'Dark';
+    }
+    applyTheme();
+
+    themeToggle.addEventListener('click', ()=>{
+      const cur = localStorage.getItem('mf_theme')||'light';
+      const next = cur==='dark'?'light':'dark';
+      localStorage.setItem('mf_theme', next); applyTheme();
+    });
+
+    // Utility functions
+    function genId(){ return 'p_' + Math.random().toString(36).slice(2,9); }
+    function sampleImg(i){ // placeholder gradient dataurl
+      const colors = [['#ffd3b4','#ff9a9e'],['#c1e1c1','#7bd389'],['#c7f0ff','#9ad2ff']];
+      const c = colors[i%colors.length];
+      return `data:image/svg+xml;utf8,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600'><defs><linearGradient id='g' x1='0' x2='1' y1='0' y2='1'><stop offset='0' stop-color='${c[0]}'/><stop offset='1' stop-color='${c[1]}'/></linearGradient></defs><rect width='100%' height='100%' fill='url(#g)'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='36' fill='rgba(255,255,255,0.9)'>MBATHE</text></svg>`)}`
+    }
+
+    function formatPrice(v){ return 'MWK ' + Number(v||0).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}) }
+
+    // Render
+    function refresh(){
+      // filters
+      const q = searchEl.value.trim().toLowerCase();
+      const cat = categoryFilter.value;
+      let list = products.slice();
+      if(q) list = list.filter(p => (p.name + ' ' + p.sku + ' ' + (p.desc||'') + ' ' + (p.category||'')).toLowerCase().includes(q));
+      if(cat && cat!=='all') list = list.filter(p => p.category===cat);
+      // sort
+      const sort = sortEl.value;
+      if(sort==='price_asc') list.sort((a,b)=>a.price-b.price);
+      else if(sort==='price_desc') list.sort((a,b)=>b.price-a.price);
+      else list.sort((a,b)=>b.created - a.created);
+
+      productsEl.innerHTML = '';
+      list.forEach(p=>{
+        const card = document.createElement('div'); card.className='card';
+        card.innerHTML = `
+          <div class="imgwrap"><img src="${p.img}" alt="${escapeHtml(p.name)}"></div>
+          <div class="meta"><div><div class="title">${escapeHtml(p.name)}</div><div class="muted small">${escapeHtml(p.sku)} • ${escapeHtml(p.category||'')}</div></div><div class="price">${formatPrice(p.price)}</div></div>
+          <div class="muted small">${escapeHtml(p.desc||'')}</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+            <div class="muted small">Stock: ${p.stock}</div>
+            <div class="actions"><button class="btn" data-id="${p.id}">Order</button></div>
+          </div>
+        `;
+        // order button
+        card.querySelector('button').addEventListener('click', ()=>openOrder(p));
+        productsEl.appendChild(card);
+      });
+
+      productCount.textContent = products.length;
+      stockCount.textContent = products.reduce((s,p)=>s + (Number(p.stock)||0), 0);
+
+      // rebuild categories
+      const cats = Array.from(new Set(['All', ...products.map(p=>p.category||'Uncategorized')]));
+      categoryFilter.innerHTML = '<option value="all">All Categories</option>' + cats.filter(c=>c!=='All').map(c=>`<option value="${c}">${c}</option>`).join('');
+    }
+
+    // escape
+    function escapeHtml(s){ return (s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;') }
+
+    // Order flow: opens WhatsApp with prefilled message, also save order locally for admin to view
+    function openOrder(product){
+      // prompt for quantity & message
+      const qty = prompt(`Enter quantity for "${product.name}" (available: ${product.stock})`, '1');
+      if(qty===null) return; // cancelled
+      const qn = Math.max(1, Math.floor(Number(qty)||1));
+      if(qn>product.stock){ if(!confirm('Quantity exceeds stock. Continue anyway?')) return; }
+      const note = prompt('Add a short message or color/size preferences (optional):', '');
+      const phone = bizPhoneEl.textContent.trim();
+      const text = `Hello, I\'d like to order ${qn} x ${product.name} (SKU: ${product.sku}) - ${formatPrice(product.price)} each. ${note ? '\nNote: ' + note : ''}`;
+      // save order locally
+      const order = {id: 'o_'+Math.random().toString(36).slice(2,9), productId:product.id, name:product.name, sku:product.sku, qty:qn, note:note||'', price:product.price, total: product.price*qn, phone:phone, created: Date.now() };
+      orders.unshift(order); writeJSON(STORAGE_ORDERS, orders);
+      // open whatsapp
+      const encoded = encodeURIComponent(text);
+      const waUrl = `https://wa.me/${phone.replace(/[\s+\-()]/g,'')}?text=${encoded}`;
+      window.open(waUrl, '_blank');
+      alert('WhatsApp will open in a new tab. Your order was saved to the admin orders list.');
+    }
+
+    // Admin
+    adminBtn.addEventListener('click', ()=>{ adminModal.classList.add('show'); renderAdmin(); });
+    closeAdmin.addEventListener('click', ()=>{ adminModal.classList.remove('show'); });
+
+    function renderAdmin(){
+      const logged = sessionStorage.getItem('mf_admin_logged')==='1';
+      if(!logged){
+        adminContent.innerHTML = `
+          <div>
+            <label>Admin Password</label>
+            <input type="password" id="adminPwInput" placeholder="Enter admin password">
+            <div style="height:10px"></div>
+            <div style="display:flex;gap:8px"><button class="btn" id="adminLoginBtn">Login</button><button class="btn ghost" id="adminResetBtn">Reset to default</button></div>
+            <div style="height:10px"></div>
+            <div class="small muted">Default password: <strong>admin123</strong> (change after login)</div>
+          </div>
+        `;
+        document.getElementById('adminLoginBtn').addEventListener('click', ()=>{
+          const val = document.getElementById('adminPwInput').value;
+          if(val===localStorage.getItem(STORAGE_ADMIN_PW)){
+            sessionStorage.setItem('mf_admin_logged','1'); renderAdmin();
+          } else alert('Wrong password');
+        });
+        document.getElementById('adminResetBtn').addEventListener('click', ()=>{
+          if(confirm('Reset admin password to default (admin123)?')){ localStorage.setItem(STORAGE_ADMIN_PW, 'admin123'); alert('Reset! Use password admin123'); }
+        });
+        return;
+      }
+
+      // dashboard
+      adminContent.innerHTML = `
+        <div style="display:flex;gap:8px;margin-bottom:10px;align-items:center">
+          <button class="btn" id="logoutAdmin">Logout</button>
+          <button class="btn ghost" id="addProductBtn">Add Product</button>
+          <button class="btn ghost" id="exportOrders">Export Orders CSV</button>
+        </div>
+        <div style="display:flex;gap:12px">
+          <div style="flex:1">
+            <h4 style="margin:0 0 6px 0">Products</h4>
+            <div class="list" id="adminProductsList"></div>
+          </div>
+          <div style="width:320px">
+            <h4 style="margin:0 0 6px 0">Orders</h4>
+            <div class="list" id="adminOrdersList"></div>
+          </div>
+        </div>
+      `;
+
+      // wire actions
+      document.getElementById('logoutAdmin').addEventListener('click', ()=>{ sessionStorage.removeItem('mf_admin_logged'); renderAdmin(); });
+      document.getElementById('addProductBtn').addEventListener('click', ()=>showProductForm());
+      document.getElementById('exportOrders').addEventListener('click', ()=>exportOrdersCSV());
+
+      // render lists
+      const aList = $('adminProductsList'); aList.innerHTML='';
+      products.forEach(p=>{
+        const it = document.createElement('div'); it.className='list-item';
+        it.innerHTML = `<img src="${p.img}"><div style="flex:1"><div style="font-weight:700">${escapeHtml(p.name)}</div><div class="muted small">${escapeHtml(p.sku)} • ${escapeHtml(p.category||'')}</div></div><div style="display:flex;flex-direction:column;gap:6px"><button class="btn ghost" data-id="${p.id}" data-action="edit">Edit</button><button class="btn" data-id="${p.id}" data-action="del">Delete</button></div>`;
+        it.querySelectorAll('button').forEach(b=>{
+          b.addEventListener('click', (ev)=>{
+            const aid = ev.currentTarget.dataset.id; const act = ev.currentTarget.dataset.action;
+            if(act==='edit') showProductForm(aid);
+            else if(act==='del'){ if(confirm('Delete product?')){ products = products.filter(x=>x.id!==aid); writeJSON(STORAGE_PRODUCTS, products); refresh(); renderAdmin(); } }
+          })
+        });
+        aList.appendChild(it);
+      });
+
+      const oList = $('adminOrdersList'); oList.innerHTML='';
+      orders.forEach(o=>{
+        const it = document.createElement('div'); it.className='list-item';
+        it.innerHTML = `<div style="flex:1"><div style="font-weight:700">${escapeHtml(o.name)} x${o.qty}</div><div class="muted small">${new Date(o.created).toLocaleString()} - ${escapeHtml(o.phone)}</div></div><div style="display:flex;flex-direction:column;gap:6px"><div class="muted small">${formatPrice(o.total)}</div><button class="btn ghost" data-id="${o.id}" data-action="delOrder">Delete</button></div>`;
+        it.querySelector('button').addEventListener('click',(ev)=>{ if(confirm('Delete order?')){ orders = orders.filter(x=>x.id!==ev.currentTarget.dataset.id); writeJSON(STORAGE_ORDERS, orders); renderAdmin(); } });
+        oList.appendChild(it);
+      });
+    }
+
+    // product add/edit form for admin
+    function showProductForm(editId){
+      const p = products.find(x=>x.id===editId) || {id:genId(), name:'', price:0, sku:'', category:'', stock:0, desc:'', img:sampleImg(0), created:Date.now() };
+      adminContent.innerHTML = `
+        <div>
+          <label>Product Name</label>
+          <input id="pf_name" value="${escapeHtml(p.name)}">
+          <label>SKU</label>
+          <input id="pf_sku" value="${escapeHtml(p.sku)}">
+          <label>Category</label>
+          <input id="pf_cat" value="${escapeHtml(p.category)}">
+          <label>Price (MWK)</label>
+          <input id="pf_price" type="number" value="${p.price}">
+          <label>Stock</label>
+          <input id="pf_stock" type="number" value="${p.stock}">
+          <label>Description</label>
+          <textarea id="pf_desc" rows="3">${escapeHtml(p.desc)}</textarea><label>Image</label>
+      <input type="file" id="pf_imgfile" accept="image/*">
+      <div style="height:10px"></div>
+      <div style="display:flex;gap:8px"><button class="btn" id="pf_save">Save</button><button class="btn ghost" id="pf_cancel">Cancel</button></div>
+    </div>
+  `;
+  document.getElementById('pf_cancel').addEventListener('click', ()=>renderAdmin());
+  document.getElementById('pf_save').addEventListener('click', ()=>{
+    const name = document.getElementById('pf_name').value.trim();
+    const sku = document.getElementById('pf_sku').value.trim() || 'SKU-'+Math.random().toString(36).slice(2,6).toUpperCase();
+    const cat = document.getElementById('pf_cat').value.trim() || 'Uncategorized';
+    const price = Number(document.getElementById('pf_price').value) || 0;
+    const stock = Number(document.getElementById('pf_stock').value) || 0;
+    const desc = document.getElementById('pf_desc').value.trim();
+    const fileInput = document.getElementById('pf_imgfile');
+
+    function saveWithImage(imgData){
+      if(editId){ // update
+        const idx = products.findIndex(x=>x.id===p.id);
+        if(idx>-1){ products[idx] = {...products[idx], name, sku, category:cat, price, stock, desc, img:imgData, created: products[idx].created}; }
+      } else {
+        products.unshift({id:p.id, name, sku, category:cat, price, stock, desc, img:imgData, created: Date.now()});
+      }
+      writeJSON(STORAGE_PRODUCTS, products); refresh(); renderAdmin();
+    }
+
+    if(fileInput.files && fileInput.files[0]){
+      const reader = new FileReader(); reader.onload = ()=> saveWithImage(reader.result); reader.readAsDataURL(fileInput.files[0]);
+    } else { saveWithImage(p.img); }
+  });
+}
+
+function exportOrdersCSV(){
+  if(orders.length===0){ alert('No orders to export'); return; }
+  const rows = [['Order ID','Created','CustomerPhone','Product','SKU','Qty','Price','Total','Note']];
+  orders.forEach(o=> rows.push([o.id,new Date(o.created).toISOString(),o.phone,o.name,o.sku,o.qty,o.price,o.total,o.note]));
+  const csv = rows.map(r=> r.map(c=> '"'+String(c).replaceAll('"','""')+'"').join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'}); const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download = 'mf_orders_'+Date.now()+'.csv'; a.click(); URL.revokeObjectURL(url);
+}
+
+// Quick preview handler
+previewBtn.addEventListener('click', ()=>{
+  const name = quickName.value.trim(); const price = Number(quickPrice.value)||0; const desc = quickDesc.value.trim();
+  if(!name || !price){ alert('Please enter a product name and price'); return; }
+  if(quickImage.files && quickImage.files[0]){
+    const reader = new FileReader(); reader.onload = ()=>{
+      const temp = {id:genId(), name, price, sku:'TEMP-'+Math.random().toString(36).slice(2,5).toUpperCase(), category:'Preview', stock:1, desc, img:reader.result};
+      openOrder(temp);
+    }; reader.readAsDataURL(quickImage.files[0]);
+  } else {
+    const temp = {id:genId(), name, price, sku:'TEMP-'+Math.random().toString(36).slice(2,5).toUpperCase(), category:'Preview', stock:1, desc, img:sampleImg(0)};
+    openOrder(temp);
+  }
+});
+clearQuick.addEventListener('click', ()=>{ quickName.value=''; quickDesc.value=''; quickPrice.value=''; quickImage.value=null; });
+
+// Search & filters
+searchEl.addEventListener('input', ()=> refresh());
+sortEl.addEventListener('change', ()=> refresh());
+categoryFilter.addEventListener('change', ()=> refresh());
+
+// logo upload
+logoEl.addEventListener('click', ()=>{
+  const ip = document.createElement('input'); ip.type='file'; ip.accept='image/*'; ip.onchange = (e)=>{
+    const f = e.target.files[0]; if(!f) return; const r = new FileReader(); r.onload = ()=>{ logoEl.style.background='url('+r.result+') center/cover'; }; r.readAsDataURL(f);
+  }; ip.click();
+});
+
+// escape and init
+refresh();
+
+// small helper: escape single quotes for prompt messages
+function escForPrompt(s){ return (s||'').replace(/'/g, "\\'"); }
+
+  </script>
+</body>
+</html>
